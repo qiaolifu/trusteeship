@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.trusteeship.manage.service.dao.TDatabaseDao">
+    <resultMap id="BaseResultMap" type="com.trusteeship.manage.service.bean.entity.TDatabase" >
+        <result property="id" column="id"/>
+        <result property="user" column="user"/>
+        <result property="url" column="url"/>
+        <result property="password" column="password"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="defaultWhereClause">
+        where 1=1
+        <if test="id!=null">and t.id=#{id}</if>
+        <if test="url!=null">and t.url=#{url}</if>
+        <if test="password!=null">and t.password=#{password}</if>
+        <if test="createTime!=null">and t.create_time=#{createTime}</if>
+    </sql>
+
+    <insert id="insert" parameterType="com.trusteeship.manage.service.bean.entity.TDatabase" useGeneratedKeys="true" keyProperty="id">
+        insert into t_database (belongs,user,url,password,create_time)
+        values (#{belongs},#{user},#{url},#{password},#{createTime})
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+		delete from t_database t where t.id = #{id}
+	</delete>
+
+    <update id="updateById" parameterType="com.trusteeship.manage.service.bean.entity.TDatabase">
+        update t_database t
+            <trim prefix="set" suffixOverrides=",">
+                <if test="id!=null">t.id=#{id},</if>
+                <if test="user!=null">t.user=#{user},</if>
+                <if test="url!=null">t.url=#{url},</if>
+                <if test="password!=null">t.password=#{password},</if>
+                <if test="createTime!=null">t.create_time=#{createTime}</if>
+            </trim>
+        where t.id=#{id}
+    </update>
+
+    <select id="findById" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+         select t.* from t_database t where t.id = #{id}
+    </select>
+
+    <select id="selectByUsername" parameterType="java.lang.String"  resultMap="BaseResultMap">
+         select t.* from t_database t,t_user a
+         where t.belongs = a.id and a.user = #{user}
+    </select>
+
+    <select id="getDatabaseIPList" parameterType="java.lang.String"  resultType="java.lang.String">
+         select t.url from t_database t
+    </select>
+
+    <select id="listCount" parameterType="com.trusteeship.manage.service.bean.page.TDatabaseP" resultType="java.lang.Integer">
+        select count(*) from t_database t
+        <include refid="defaultWhereClause" />
+    </select>
+
+    <select id="list" parameterType="com.trusteeship.manage.service.bean.page.TDatabaseP" resultMap="BaseResultMap">
+        select t.* from t_database t
+        <include refid="defaultWhereClause" />
+        limit #{_start},#{_pageSize}
+    </select>
+
+</mapper>

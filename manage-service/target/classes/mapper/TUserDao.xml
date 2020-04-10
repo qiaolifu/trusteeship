@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.trusteeship.manage.service.dao.TUserDao">
+    <resultMap id="BaseResultMap" type="com.trusteeship.manage.service.bean.entity.TUser" >
+        <result property="id" column="id"/>
+        <result property="database" column="database"/>
+        <result property="user" column="user"/>
+        <result property="password" column="password"/>
+        <result property="effectTime" column="effect_time"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="defaultWhereClause">
+        where 1=1
+        <if test="id!=null">and t.id=#{id}</if>
+        <if test="database!=null">and t.database=#{database}</if>
+        <if test="user!=null">and t.user=#{user}</if>
+        <if test="password!=null">and t.password=#{password}</if>
+        <if test="effectTime!=null">and t.effect_time=#{effectTime}</if>
+        <if test="status!=null">and t.status=#{status}</if>
+        <if test="createTime!=null">and t.create_time=#{createTime}</if>
+        <if test="updateTime!=null">and t.update_time=#{updateTime}</if>
+    </sql>
+
+    <insert id="insert" parameterType="com.trusteeship.manage.service.bean.entity.TUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user (user,password,phone,effect_time,status,create_time,update_time)
+        values (#{user},#{password},#{phone},#{effectTime},#{status},now(),#{updateTime})
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+		delete from t_user t where t.id = #{id}
+	</delete>
+
+    <update id="updateById" parameterType="com.trusteeship.manage.service.bean.entity.TUser">
+        update t_user t
+            <trim prefix="set" suffixOverrides=",">
+                <if test="id!=null">t.id=#{id},</if>
+                <if test="user!=null">t.user=#{user},</if>
+                <if test="password!=null">t.password=#{password},</if>
+                <if test="effectTime!=null">t.effect_time=#{effectTime},</if>
+                <if test="status!=null">t.status=#{status},</if>
+                <if test="createTime!=null">t.create_time=#{createTime},</if>
+                <if test="updateTime!=null">t.update_time=#{updateTime}</if>
+            </trim>
+        where t.id=#{id}
+    </update>
+
+    <select id="findById" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+         select t.* from t_user t where t.id = #{id}
+    </select>
+    <select id="selectByUnAndPsw" parameterType="com.trusteeship.manage.service.bean.entity.TUser"  resultMap="BaseResultMap">
+         select t.id,t.status,t.effect_time from t_user t where t.user = #{user} and t.password = #{password}
+    </select>
+    <select id="selectByUsername" parameterType="java.lang.String"  resultMap="BaseResultMap">
+         select t.id,t.status from t_user t where t.user = #{user}
+    </select>
+
+    <select id="getUserNameList" parameterType="java.lang.String"  resultType="java.lang.String">
+         select t.user from t_user t
+    </select>
+
+
+
+    <select id="listCount" parameterType="com.trusteeship.manage.service.bean.page.TUserP" resultType="java.lang.Integer">
+        select count(*) from t_user t
+        <include refid="defaultWhereClause" />
+    </select>
+
+    <select id="list" parameterType="com.trusteeship.manage.service.bean.page.TUserP" resultMap="BaseResultMap">
+        select t.* from t_user t
+        <include refid="defaultWhereClause" />
+        limit #{_start},#{_pageSize}
+    </select>
+
+</mapper>
