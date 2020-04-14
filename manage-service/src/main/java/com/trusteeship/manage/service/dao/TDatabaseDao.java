@@ -19,4 +19,6 @@ public interface TDatabaseDao extends BaseDao<TDatabase,TDatabaseP> {
     TDatabase selectByUsername(String userName);
 
     List<String> getDatabaseIPList(String databaseIp);
+
+    List<TDatabase> getAll();
 }

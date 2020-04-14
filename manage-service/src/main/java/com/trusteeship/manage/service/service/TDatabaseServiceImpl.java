@@ -26,4 +26,9 @@ public class TDatabaseServiceImpl extends BaseServiceImpl<TDatabase, TDatabaseP>
     public List<String> getDatabaseIPList(String databaseIp) {
         return tDatabaseDao.getDatabaseIPList(databaseIp);
     }
+
+    @Override
+    public List<TDatabase> all() {
+        return tDatabaseDao.getAll();
+    }
 }

@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8088
 mybatis:
   mapperLocations: classpath:mapper/*.xml
 spring:
@@ -9,9 +9,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     #MySQL配置
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/trusteeship?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/s_tiansj_net?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=UTC
     username: root
-    password: root
+    password: 506fb3a1b82a8a4b
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss

@@ -21,4 +21,6 @@ public interface TUserDao extends BaseDao<TUser,TUserP> {
     TUser selectByUnAndPsw(TUser tUser);
 
     TUser selectByUsername(String userName);
+
+    List<TUser> getAll();
 }

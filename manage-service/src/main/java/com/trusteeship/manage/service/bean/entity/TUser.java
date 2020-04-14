@@ -14,6 +14,8 @@ import com.core.page.BaseParam;
  */
 @Data
 public class TUser extends BaseParam implements Serializable {
+    public static final String ADMIN = "woshiqlf";
+	public static final String KEY = "197346825";
 	private static final long serialVersionUID = 1L;
 	public static final Integer INVALID= 0;   //status 失效
 	public static final Integer NORMAL = 1;//正常

@@ -5,6 +5,7 @@ import com.trusteeship.manage.service.bean.entity.TUser;
 import com.trusteeship.manage.service.bean.page.TUserP;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface TUserService extends BaseService<TUser, TUserP> {
@@ -14,6 +15,10 @@ public interface TUserService extends BaseService<TUser, TUserP> {
     TUser selectByUnAndPsw(TUser tUser);
 
     TUser selectByUsername(String userName);
+
+    List<TUser> all();
+
+    Map getInfo();
 }
 
 

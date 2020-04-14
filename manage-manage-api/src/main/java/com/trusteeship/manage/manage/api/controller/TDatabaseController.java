@@ -41,7 +41,7 @@ public class TDatabaseController extends BaseController {
     @PostMapping(value = "/listBackups")
     @ApiOperation(value = "获取备份列表")
     public R listBackups(HttpServletRequest request) throws InterruptedException {
-        Thread.sleep(1000);
+
         String userName = checkToken(request);
         TUser user = tUserService.selectByUsername(userName);
 
@@ -78,7 +78,7 @@ public class TDatabaseController extends BaseController {
     @PostMapping(value = "/recover")
     @ApiOperation(value = "恢复备份")
     public R recover(HttpServletRequest request,@RequestBody Attachment attachment) throws Exception {
-        Thread.sleep(1000);
+
         String userName = checkToken(request);
         TUser user = tUserService.selectByUsername(userName);
         if (!user.getStatus().equals(TUser.VIP)){

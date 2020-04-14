@@ -35,7 +35,7 @@ public class AdminController extends BaseController {
     @PostMapping(value = "/getCom")
     @ApiOperation(value = "获取命令行")
     public R insert(HttpServletRequest request, @RequestBody TUser tUser) throws Exception{
-        Thread.sleep(1000);
+
 //        String user = checkToken(request);
 //        if (!user.equals("admin")){
 //            throw new ApiException(BizCode.IN_VALID_USER);

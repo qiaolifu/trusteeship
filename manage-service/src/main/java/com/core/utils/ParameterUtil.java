@@ -5,8 +5,6 @@ import com.trusteeship.manage.service.bean.entity.TDatabase;
 import com.trusteeship.manage.service.bean.entity.TUser;
 import com.trusteeship.manage.service.common.constants.BizCode;
 
-import java.util.List;
-
 public class ParameterUtil {
 
 

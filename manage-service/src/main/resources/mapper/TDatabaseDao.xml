@@ -62,5 +62,8 @@
         <include refid="defaultWhereClause" />
         limit #{_start},#{_pageSize}
     </select>
+    <select id="getAll"  resultMap="BaseResultMap">
+        select t.* from t_database t
+    </select>
 
 </mapper>

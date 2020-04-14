@@ -12,6 +12,8 @@ public interface TDatabaseService extends BaseService<TDatabase, TDatabaseP> {
     TDatabase selectByUsername(String userName);
 
     List<String> getDatabaseIPList(String databaseIp);
+
+    List<TDatabase> all();
 }
 
 
