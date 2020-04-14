@@ -116,7 +116,7 @@ public class TUserController extends BaseController {
                 tUserService.updateById(user);
             }
         }if (user.getStatus().equals(TUser.NORMAL)){
-            System.out.println("id为：" + user.getId() + "登入");
+            System.out.println("id为：" + user.getUser() + "登入");
         }
     }
 }
