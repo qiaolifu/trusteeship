@@ -26,20 +26,16 @@ import java.io.IOException;
 @Api(value = "")
 public class AdminController extends BaseController {
     @Autowired
-    private TUserService tUserService;
-    @Autowired
-    private RedisService redisService;
-    @Autowired
     private TDatabaseService tDatabaseService;
 
     @PostMapping(value = "/getCom")
     @ApiOperation(value = "获取命令行")
     public R insert(HttpServletRequest request, @RequestBody TUser tUser) throws Exception{
 
-//        String user = checkToken(request);
-//        if (!user.equals("admin")){
-//            throw new ApiException(BizCode.IN_VALID_USER);
-//        }
+        String user = checkToken(request);
+        if (!user.equals("admin")){
+            throw new ApiException(BizCode.IN_VALID_USER);
+        }
         TDatabase database = tDatabaseService.selectByUsername(tUser.getUser());
         String com = DatabaseUtil.getXShellCom(database,tUser);
         return R.ok().put("com",com);

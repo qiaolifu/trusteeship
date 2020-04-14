@@ -16,13 +16,13 @@ public class DatabaseUtil {
                 "  mkdir trusteeship/" + user.getUser() +"\n"+
                 "fi\n" +
                 "fi;";
-//        try {
-//            Process process = runtime.exec(initCom);
-//            process.waitFor();
-//            process.destroy();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Process process = runtime.exec(initCom);
+            process.waitFor();
+            process.destroy();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Date date = new Date();
         StringBuilder com = new StringBuilder();
         com.append("mysql -u").append(database.getUser())
