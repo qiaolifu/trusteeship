@@ -19,6 +19,8 @@ public interface TUserService extends BaseService<TUser, TUserP> {
     List<TUser> all();
 
     Map getInfo();
+
+    Map checkAdmin(TUser tUser);
 }
 
 

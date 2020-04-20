@@ -14,18 +14,19 @@ import com.core.page.BaseParam;
  */
 @Data
 public class TUser extends BaseParam implements Serializable {
-    public static final String ADMIN = "woshiqlf";
-	public static final String KEY = "197346825";
+
 	private static final long serialVersionUID = 1L;
 	public static final Integer INVALID= 0;   //status 失效
 	public static final Integer NORMAL = 1;//正常
 	public static final Integer VIP= 2;   //status VIP
+	public static final Integer ADMIN = 3;
 
 	private Integer id;  //
 	private String user;  //用户名
 	private String password;  //密码
 	private String phone;  //联系电话
-	private Date effectTime;  //VIP到期时间
+	private Date effectTime;  //到期时间
+	private Date vipTime;  //VIP到期时间
 	private Integer status;  //0-失效；1-正常；2-VIP
 	private Date createTime;  //
 	private Date updateTime;  //

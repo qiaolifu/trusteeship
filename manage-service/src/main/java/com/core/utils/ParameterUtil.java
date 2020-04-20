@@ -21,17 +21,21 @@ public class ParameterUtil {
     public static void checkParameter(TDatabase database) {
         String regex = "^[a-z0-9A-Z]+$";
         String urlRegex = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))";
-        String portRegex = "^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)";
+//        String portRegex = "^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)";
 
 
-        String[] dataUrl = database.getUrl().split(":");
-        if (dataUrl.length != 2) {
-            throw new ApiException(BizCode.DATABASE_IP_ERROR);
-        }
-        if (null == dataUrl[0] || "".equals(dataUrl[0]) || !dataUrl[0].matches(urlRegex)) {
-            throw new ApiException(BizCode.DATABASE_IP_ERROR);
-        }
-        if (null == dataUrl[1] || "".equals(dataUrl[1]) || !dataUrl[1].matches(portRegex)) {
+//        String[] dataUrl = database.getUrl().split(":");
+//        if (dataUrl.length != 2) {
+//            throw new ApiException(BizCode.DATABASE_IP_ERROR);
+//        }
+//        if (null == dataUrl[0] || "".equals(dataUrl[0]) || !dataUrl[0].matches(urlRegex)) {
+//            throw new ApiException(BizCode.DATABASE_IP_ERROR);
+//        }
+//        if (null == dataUrl[1] || "".equals(dataUrl[1]) || !dataUrl[1].matches(portRegex)) {
+//            throw new ApiException(BizCode.DATABASE_IP_ERROR);
+//        }
+
+        if (null == database.getUrl() || "".equals(database.getUrl()) || !database.getUrl().matches(urlRegex)) {
             throw new ApiException(BizCode.DATABASE_IP_ERROR);
         }
         if (null == database.getPassword() || "".equals(database.getPassword()) || !database.getPassword().matches(regex)) {

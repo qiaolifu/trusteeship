@@ -3,10 +3,10 @@ package com.trusteeship.manage.manage.api.controller;
 
 import com.core.exception.ApiException;
 import com.core.page.R;
-import com.core.utils.ParameterUtil;
 import com.trusteeship.manage.service.base.RedisService;
 import com.trusteeship.manage.service.bean.entity.TDatabase;
 import com.trusteeship.manage.service.bean.entity.TUser;
+import com.trusteeship.manage.service.bean.page.TUserP;
 import com.trusteeship.manage.service.common.constants.BizCode;
 import com.trusteeship.manage.service.common.constants.RedisKey;
 import com.trusteeship.manage.service.service.itf.TDatabaseService;
@@ -39,43 +39,81 @@ public class TUserController extends BaseController {
 
     @PostMapping(value = "/register")
     @ApiOperation(value = "注册")
-    public R insert(@RequestBody TUser tUser) throws InterruptedException {
+    public R insert(@RequestBody TUser tUser) {
 
         checkParameter(tUser);
         checkUserExist(tUser);
         tUser.setCreateTime(new Date());
-        tUser.setStatus(TUser.NORMAL);
+        tUser.setStatus(TUser.INVALID);
+        tUser.setEffectTime(new Date());
+        tUser.setVipTime(new Date());
         tUserService.insert(tUser);
         return R.ok();
     }
 
     @PostMapping(value = "/login")
     @ApiOperation(value = "登录")
-    public R login(@RequestBody TUser tUser) throws InterruptedException {
-        if (tUser.getUser().equals(TUser.ADMIN) && tUser.getPassword().equals(TUser.KEY)){
-            Map map = tUserService.getInfo();
-            return R.ok().put("super", map);
+    public R login(@RequestBody TUser tUser) {
+        Map flag = tUserService.checkAdmin(tUser);
+        if (null != flag) {
+            return R.ok().put("super", flag);
         }
-        loginCheck(tUser);
+        TUser user = loginCheck(tUser);
         long time = System.currentTimeMillis();
         String token = UUID.randomUUID() + Long.toString(time);
-        redisService.set(RedisKey.USER_KEY_TOKEN_CUSTOMER + token , tUser.getUser(), 30 * 60);
-        return R.ok().put("token", token);
+        redisService.set(RedisKey.USER_KEY_TOKEN_CUSTOMER + token, tUser.getUser(), 30 * 60);
+        Map map = new HashMap();
+        map.put("status", user.getStatus());
+        map.put("token", token);
+        return R.ok().putAll(map);
     }
 
     @PostMapping(value = "/binding")
     @ApiOperation(value = "绑定数据库")
-    public R binding(HttpServletRequest request,@RequestBody TDatabase database) throws InterruptedException {
+    public R binding(HttpServletRequest request, @RequestBody TDatabase database) {
         String u = checkToken(request);
         TUser user = tUserService.selectByUsername(u);
         TDatabase db = tDatabaseService.selectByUsername(u);
-        if (null != db){
+        if (null != db) {
             throw new ApiException(BizCode.DATABASE_EXIST);
         }
         checkParameter(database);
         checkDatabaseExist(database);
         database.setBelongs(user.getId());
         tDatabaseService.insert(database);
+        return R.ok();
+    }
+
+    @PostMapping(value = "/list")
+    @ApiOperation(value = "列表")
+    public R list(HttpServletRequest request, @RequestBody TUserP tUser) {
+        String u = checkToken(request);
+        if (!u.equals("admin")) {
+            throw new ApiException(BizCode.IN_VALID_USER);
+        }
+        tUserService.list(tUser);
+        return R.ok().put("users", tUser);
+    }
+
+    @PostMapping(value = "/detail")
+    @ApiOperation(value = "详情")
+    public R detail(HttpServletRequest request, @RequestBody TUser tUser) {
+        String u = checkToken(request);
+        if (!u.equals("admin")) {
+            throw new ApiException(BizCode.IN_VALID_USER);
+        }
+        TUser user = tUserService.findById(tUser.getId());
+        return R.ok().put("user", user);
+    }
+
+    @PostMapping(value = "/update")
+    @ApiOperation(value = "修改")
+    public R update(HttpServletRequest request, @RequestBody TUser tUser) {
+        String u = checkToken(request);
+        if (!u.equals("admin")) {
+            throw new ApiException(BizCode.IN_VALID_USER);
+        }
+        tUserService.updateById(tUser);
         return R.ok();
     }
 
@@ -95,28 +133,39 @@ public class TUserController extends BaseController {
         }
     }
 
-    private void loginCheck(TUser tUser) {
+    private TUser loginCheck(TUser tUser) {
         String regex = "^[a-z0-9A-Z]+$";
         checkParameterUnAndPsw(tUser, regex);
         TUser user = tUserService.selectByUnAndPsw(tUser);
-        if (null == user){
+        if (null == user) {
             throw new ApiException(BizCode.ERROR_USER_PWD);
         }
-        checkUserStatus(user);
+        if (!user.getStatus().equals(TUser.ADMIN)) {
+            checkUserStatus(user);
+        }
+        return user;
     }
 
     @Transactional
     public void checkUserStatus(TUser user) {
+        Date date = new Date();
         if (user.getStatus().equals(TUser.INVALID)) {
             throw new ApiException(BizCode.EXPIRE_USER);
         }
-        if (user.getStatus().equals(TUser.VIP)){
-            if (user.getEffectTime().getTime() < new Date().getTime()){
+        if (user.getVipTime().getTime() > date.getTime()) {
+            user.setStatus(TUser.VIP);
+        } else {
+            if (user.getEffectTime().getTime() > date.getTime()) {
                 user.setStatus(TUser.NORMAL);
-                tUserService.updateById(user);
+            } else {
+                user.setStatus(TUser.INVALID);
             }
-        }if (user.getStatus().equals(TUser.NORMAL)){
-            System.out.println("id为：" + user.getUser() + "登入");
+        }
+        tUserService.updateById(user);
+        if (user.getStatus().equals(TUser.INVALID)) {
+            throw new ApiException(BizCode.EXPIRE_USER);
         }
     }
+
 }
+

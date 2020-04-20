@@ -9,12 +9,16 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     #MySQL配置
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/s_tiansj_net?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/trusteeship?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password: 506fb3a1b82a8a4b
+    password: root
+  #    password: 506fb3a1b82a8a4b
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   redis:
     host: 127.0.0.1 # Redis服务器地址
     port: 6379  # Redis服务器连接端口
+
+super:
+  admin: woshiqlf

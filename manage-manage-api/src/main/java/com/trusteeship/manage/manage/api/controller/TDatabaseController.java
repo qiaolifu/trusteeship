@@ -4,7 +4,6 @@ package com.trusteeship.manage.manage.api.controller;
 import com.core.exception.ApiException;
 import com.core.page.R;
 import com.core.utils.DatabaseUtil;
-import com.core.utils.DateUtil;
 import com.trusteeship.manage.service.bean.entity.Attachment;
 import com.trusteeship.manage.service.bean.entity.TDatabase;
 import com.trusteeship.manage.service.bean.entity.TUser;
@@ -14,9 +13,6 @@ import com.trusteeship.manage.service.service.itf.TUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -48,7 +43,7 @@ public class TDatabaseController extends BaseController {
         if (user.getStatus().equals(TUser.INVALID)) {
             throw new ApiException(BizCode.EXPIRE_USER);
         }
-        String filePath = "\\trusteeship\\" + userName;
+        String filePath = "/trusteeship/" + userName + "/";
         List<String> filenameList = getFiles(filePath);
         return R.ok().put("filename", filenameList);
     }
@@ -60,10 +55,10 @@ public class TDatabaseController extends BaseController {
                          @RequestBody Attachment attachment) throws IOException {
         String username = checkToken(request);
         // 读到流中
-        InputStream inStream = new FileInputStream("\\trusteeship\\" + username + "\\" + attachment.getFilename() + ".sql.gz");
+        InputStream inStream = new FileInputStream("/trusteeship/" + username + "/" + attachment.getFilename() + ".sql");
         response.reset();
         response.setContentType("bin");
-        response.addHeader("Content-Disposition", "attachment; filename=\"" + attachment.getFilename() + "\"");
+        response.addHeader("Content-Disposition", "attachment; filename=\"" + attachment.getFilename() + ".sql\"");
         byte[] b = new byte[100];
         int len;
         try {
@@ -97,7 +92,7 @@ public class TDatabaseController extends BaseController {
         if (null != tempLists && 0 != tempLists.length) {
             for (File tempList : tempLists) {
                 if (tempList.isFile()) {
-                    String[] s = tempList.toString().split("\\\\");
+                    String[] s = tempList.toString().split("/");
                     String filename = s[s.length - 1].substring(0, s[s.length - 1].lastIndexOf("."));
                     files.add(filename);
                 }

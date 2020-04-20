@@ -1,16 +1,17 @@
 package com.trusteeship.manage.service.service;
 
+import com.trusteeship.manage.service.base.AdminConfig;
+import com.trusteeship.manage.service.base.BaseServiceImpl;
 import com.trusteeship.manage.service.bean.entity.TDatabase;
-import com.trusteeship.manage.service.service.itf.TDatabaseService;
-import org.springframework.stereotype.Service;
 import com.trusteeship.manage.service.bean.entity.TUser;
 import com.trusteeship.manage.service.bean.page.TUserP;
 import com.trusteeship.manage.service.dao.TUserDao;
+import com.trusteeship.manage.service.service.itf.TDatabaseService;
 import com.trusteeship.manage.service.service.itf.TUserService;
-import com.trusteeship.manage.service.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,14 @@ public class TUserServiceImpl extends BaseServiceImpl<TUser, TUserP> implements 
     private TUserDao tUserDao;
     @Autowired
     private TDatabaseService tDatabaseService;
+    @Autowired
+    private AdminConfig adminConfigProperties;
+    private static AdminConfig configProperties;
+
+    @PostConstruct
+    public void init() {
+        configProperties = this.adminConfigProperties;
+    }
 
     @Override
     public List<String> getUserNameList(String userName) {
@@ -51,5 +60,13 @@ public class TUserServiceImpl extends BaseServiceImpl<TUser, TUserP> implements 
         map.put("user",users);
         map.put("database",databases);
         return map;
+    }
+
+    @Override
+    public Map checkAdmin(TUser tUser) {
+        if (tUser.getUser().equals(configProperties.getAdmin()) && tUser.getPassword().equals(configProperties.getAdmin())) {
+            return getInfo();
+        }
+        return null;
     }
 }
