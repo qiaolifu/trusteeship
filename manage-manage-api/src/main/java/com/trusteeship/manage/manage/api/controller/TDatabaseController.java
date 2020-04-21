@@ -49,7 +49,7 @@ public class TDatabaseController extends BaseController {
     }
 
 
-    @GetMapping(value = "/download")
+    @PostMapping(value = "/download")
     @ApiOperation(value = "下载")
     public void download(HttpServletRequest request, HttpServletResponse response,
                          @RequestBody Attachment attachment) throws IOException {
@@ -57,13 +57,18 @@ public class TDatabaseController extends BaseController {
         // 读到流中
         InputStream inStream = new FileInputStream("/trusteeship/" + username + "/" + attachment.getFilename() + ".sql");
         response.reset();
-        response.setContentType("bin");
-        response.addHeader("Content-Disposition", "attachment; filename=\"" + attachment.getFilename() + ".sql\"");
+        response.setContentType("text/plain");
+        response.addHeader("Content-Disposition", "attachment; filename=" + attachment.getFilename() + ".sql");
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        response.addHeader("Access-Control-Allow-Headers", "Content-Type");
         byte[] b = new byte[100];
         int len;
+
         try {
-            while ((len = inStream.read(b)) > 0)
-                response.getOutputStream().write(b, 0, len);
+            len = inStream.read(b);
+            if (len <= 0)throw new ApiException(BizCode.LOG_DATA_NOT_EXIST);
+            response.getOutputStream().write(b, 0, len);
             inStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,6 +87,15 @@ public class TDatabaseController extends BaseController {
         TDatabase database = tDatabaseService.selectByUsername(userName);
         DatabaseUtil.recover(attachment.getFilename(),user,database);
         return R.ok();
+    }
+
+    @PostMapping(value = "/dbList")
+    @ApiOperation(value = "获取数据库列表")
+    public R dbList(HttpServletRequest request) throws Exception {
+        String userName = checkToken(request);
+        TUser user = tUserService.selectByUsername(userName);
+        List<String> list = tDatabaseService.dbList(user);
+        return R.ok().put("db",list);
     }
 
 

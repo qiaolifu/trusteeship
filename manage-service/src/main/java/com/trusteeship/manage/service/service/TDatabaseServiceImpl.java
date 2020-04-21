@@ -1,5 +1,6 @@
 package com.trusteeship.manage.service.service;
 
+import com.trusteeship.manage.service.bean.entity.TUser;
 import org.springframework.stereotype.Service;
 import com.trusteeship.manage.service.bean.entity.TDatabase;
 import com.trusteeship.manage.service.bean.page.TDatabaseP;
@@ -30,5 +31,10 @@ public class TDatabaseServiceImpl extends BaseServiceImpl<TDatabase, TDatabaseP>
     @Override
     public List<TDatabase> all() {
         return tDatabaseDao.getAll();
+    }
+
+    @Override
+    public List<String> dbList(TUser user ){
+        return tDatabaseDao.dbList(user);
     }
 }

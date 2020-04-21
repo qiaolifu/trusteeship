@@ -19,6 +19,7 @@ public class TUserP extends Page {
 	private String database; //数据url
 	private String user; //用户名
 	private String password; //密码
+	private String phone;  //联系电话
 	private Date effectTime; //到期时间
 	private Date vipTime; //VIP到期时间
 	private Integer status; //0-失效；1-正常；2-VIP

@@ -27,13 +27,16 @@ import java.io.IOException;
 public class AdminController extends BaseController {
     @Autowired
     private TDatabaseService tDatabaseService;
+    @Autowired
+    private TUserService tUserService;
 
     @PostMapping(value = "/getCom")
     @ApiOperation(value = "获取命令行")
     public R insert(HttpServletRequest request, @RequestBody TUser tUser) throws Exception{
 
-        String user = checkToken(request);
-        if (!user.equals("admin")){
+        String u = checkToken(request);
+        TUser user = tUserService.selectByUsername(u);
+        if (!user.getStatus().equals(TUser.ADMIN)) {
             throw new ApiException(BizCode.IN_VALID_USER);
         }
         TDatabase database = tDatabaseService.selectByUsername(tUser.getUser());

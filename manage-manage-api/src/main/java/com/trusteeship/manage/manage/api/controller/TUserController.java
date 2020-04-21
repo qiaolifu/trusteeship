@@ -44,7 +44,7 @@ public class TUserController extends BaseController {
         checkParameter(tUser);
         checkUserExist(tUser);
         tUser.setCreateTime(new Date());
-        tUser.setStatus(TUser.INVALID);
+        tUser.setStatus(TUser.NORMAL);
         tUser.setEffectTime(new Date());
         tUser.setVipTime(new Date());
         tUserService.insert(tUser);
@@ -88,7 +88,8 @@ public class TUserController extends BaseController {
     @ApiOperation(value = "列表")
     public R list(HttpServletRequest request, @RequestBody TUserP tUser) {
         String u = checkToken(request);
-        if (!u.equals("admin")) {
+        TUser user = tUserService.selectByUsername(u);
+        if (!user.getStatus().equals(TUser.ADMIN)) {
             throw new ApiException(BizCode.IN_VALID_USER);
         }
         tUserService.list(tUser);
@@ -99,18 +100,20 @@ public class TUserController extends BaseController {
     @ApiOperation(value = "详情")
     public R detail(HttpServletRequest request, @RequestBody TUser tUser) {
         String u = checkToken(request);
-        if (!u.equals("admin")) {
+        TUser user = tUserService.selectByUsername(u);
+        if (!user.getStatus().equals(TUser.ADMIN)) {
             throw new ApiException(BizCode.IN_VALID_USER);
         }
-        TUser user = tUserService.findById(tUser.getId());
-        return R.ok().put("user", user);
+        TUser detail = tUserService.findById(tUser.getId());
+        return R.ok().put("user", detail);
     }
 
     @PostMapping(value = "/update")
     @ApiOperation(value = "修改")
     public R update(HttpServletRequest request, @RequestBody TUser tUser) {
         String u = checkToken(request);
-        if (!u.equals("admin")) {
+        TUser user = tUserService.selectByUsername(u);
+        if (!user.getStatus().equals(TUser.ADMIN)) {
             throw new ApiException(BizCode.IN_VALID_USER);
         }
         tUserService.updateById(tUser);
@@ -134,8 +137,7 @@ public class TUserController extends BaseController {
     }
 
     private TUser loginCheck(TUser tUser) {
-        String regex = "^[a-z0-9A-Z]+$";
-        checkParameterUnAndPsw(tUser, regex);
+        checkParameterUnAndPsw(tUser);
         TUser user = tUserService.selectByUnAndPsw(tUser);
         if (null == user) {
             throw new ApiException(BizCode.ERROR_USER_PWD);

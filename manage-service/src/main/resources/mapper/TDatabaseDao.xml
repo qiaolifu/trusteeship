@@ -65,5 +65,8 @@
     <select id="getAll"  resultMap="BaseResultMap">
         select t.* from t_database t
     </select>
+    <select id="dbList" parameterType="com.trusteeship.manage.service.bean.entity.TUser"  resultType="java.lang.String">
+         select t.url from t_database t where t.belongs = #{id}
+    </select>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.trusteeship.manage.service.dao;
 
 import com.trusteeship.manage.service.base.itf.BaseDao;
 import com.trusteeship.manage.service.bean.entity.TDatabase;
+import com.trusteeship.manage.service.bean.entity.TUser;
 import com.trusteeship.manage.service.bean.page.TDatabaseP;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +22,6 @@ public interface TDatabaseDao extends BaseDao<TDatabase,TDatabaseP> {
     List<String> getDatabaseIPList(String databaseIp);
 
     List<TDatabase> getAll();
+
+    List<String> dbList(TUser user);
 }

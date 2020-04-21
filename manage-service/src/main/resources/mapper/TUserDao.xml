@@ -73,7 +73,7 @@
     </select>
 
     <select id="list" parameterType="com.trusteeship.manage.service.bean.page.TUserP" resultMap="BaseResultMap">
-        select t.`user`,t.`phone`,t.`effect_time`,t.`vip_time`,t.`status` from t_user t
+        select t.id,t.`user`,t.`phone`,t.`effect_time`,t.`vip_time`,t.`status` from t_user t
         <include refid="defaultWhereClause" />
         limit #{_start},#{_pageSize}
     </select>
