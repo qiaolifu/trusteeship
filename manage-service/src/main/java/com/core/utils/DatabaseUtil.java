@@ -17,22 +17,6 @@ public class DatabaseUtil {
         if (!file.exists()) {
             file.mkdirs();
         }
-//
-//        Runtime runtime = Runtime.getRuntime();
-//        String initCom = "if [ ! -d /trusteeship  ];then \n" +
-//                "  mkdir /trusteeship\n" +
-//                "  if [ ! -d /trusteeship/" + user.getUser() + "/  ];then\n" +
-//                "  mkdir /trusteeship/" + user.getUser() + "/\n" +
-//                "fi\n" +
-//                "fi;";
-//        try {
-//            Process process = runtime.exec(initCom);
-//            process.waitFor();
-//            process.destroy();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        Date date = new Date();
         StringBuilder com = new StringBuilder();
         com.append("mysql -u").append(database.getUser())
                 .append(" -p").append(database.getPassword())
@@ -61,6 +45,7 @@ public class DatabaseUtil {
             Process process = runtime.exec(com.toString());
             process.waitFor();
             process.destroy();
+            System.out.println("######用户：" + user.getUser() + "  回档至  " +database.getUrl()  + "   " +  filename + "  成功######");
         } catch (Exception e) {
             e.printStackTrace();
         }

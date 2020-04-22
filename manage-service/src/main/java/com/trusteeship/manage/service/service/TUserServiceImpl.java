@@ -1,5 +1,6 @@
 package com.trusteeship.manage.service.service;
 
+import com.core.utils.DateUtil;
 import com.trusteeship.manage.service.base.AdminConfig;
 import com.trusteeship.manage.service.base.BaseServiceImpl;
 import com.trusteeship.manage.service.bean.entity.TDatabase;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,5 +70,16 @@ public class TUserServiceImpl extends BaseServiceImpl<TUser, TUserP> implements 
             return getInfo();
         }
         return null;
+    }
+
+    @Override
+    public void updateLog() {
+        TUser user = tUserDao.selectByUsername("admin");
+        updateById(user);
+    }
+
+    @Override
+    public void updateData() {
+        tUserDao.updateAll();
     }
 }

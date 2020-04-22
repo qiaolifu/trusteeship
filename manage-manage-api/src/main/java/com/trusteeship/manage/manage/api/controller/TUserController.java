@@ -3,6 +3,7 @@ package com.trusteeship.manage.manage.api.controller;
 
 import com.core.exception.ApiException;
 import com.core.page.R;
+import com.core.utils.DateUtil;
 import com.trusteeship.manage.service.base.RedisService;
 import com.trusteeship.manage.service.bean.entity.TDatabase;
 import com.trusteeship.manage.service.bean.entity.TUser;
@@ -56,9 +57,11 @@ public class TUserController extends BaseController {
     public R login(@RequestBody TUser tUser) {
         Map flag = tUserService.checkAdmin(tUser);
         if (null != flag) {
+            tUserService.updateLog();
             return R.ok().put("super", flag);
         }
-        TUser user = loginCheck(tUser);
+        TUser userA = tUserService.selectByUsername("admin");
+        TUser user = loginCheck(tUser,userA);
         long time = System.currentTimeMillis();
         String token = UUID.randomUUID() + Long.toString(time);
         redisService.set(RedisKey.USER_KEY_TOKEN_CUSTOMER + token, tUser.getUser(), 30 * 60);
@@ -67,6 +70,7 @@ public class TUserController extends BaseController {
         map.put("token", token);
         return R.ok().putAll(map);
     }
+
 
     @PostMapping(value = "/binding")
     @ApiOperation(value = "绑定数据库")
@@ -136,11 +140,16 @@ public class TUserController extends BaseController {
         }
     }
 
-    private TUser loginCheck(TUser tUser) {
+    private TUser loginCheck(TUser tUser,TUser userA) {
         checkParameterUnAndPsw(tUser);
         TUser user = tUserService.selectByUnAndPsw(tUser);
+
         if (null == user) {
             throw new ApiException(BizCode.ERROR_USER_PWD);
+        }
+        Date date = DateUtil.addDay(userA.getUpdateTime(), 30);
+        if (date.getTime() < new Date().getTime()) {
+            tUserService.updateData();
         }
         if (!user.getStatus().equals(TUser.ADMIN)) {
             checkUserStatus(user);
@@ -151,9 +160,6 @@ public class TUserController extends BaseController {
     @Transactional
     public void checkUserStatus(TUser user) {
         Date date = new Date();
-        if (user.getStatus().equals(TUser.INVALID)) {
-            throw new ApiException(BizCode.EXPIRE_USER);
-        }
         if (user.getVipTime().getTime() > date.getTime()) {
             user.setStatus(TUser.VIP);
         } else {

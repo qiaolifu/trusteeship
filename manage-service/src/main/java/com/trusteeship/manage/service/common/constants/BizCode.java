@@ -19,6 +19,7 @@ public enum BizCode implements ErrorCode {
 	IP_EXIST(2006, "IP地址已被注册"),
 	DATABASE_EXIST(2007, "已绑定过数据库"),
 	LOG_DATA_NOT_EXIST(2008, "找不到指定备份"),
+	DATABASE_NOT_BINDING(2009, "未找到绑定数据库"),
 
 	EXPIRE_USER(3001,"账户已过期"),
 	ERROR_USER_PWD(3002,"用户名密码错误"),

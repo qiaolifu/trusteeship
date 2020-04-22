@@ -40,7 +40,9 @@ public class AdminController extends BaseController {
             throw new ApiException(BizCode.IN_VALID_USER);
         }
         TDatabase database = tDatabaseService.selectByUsername(tUser.getUser());
+        if(null == database)throw new ApiException(BizCode.DATABASE_NOT_BINDING);
         String com = DatabaseUtil.getXShellCom(database,tUser);
+
         return R.ok().put("com",com);
     }
 

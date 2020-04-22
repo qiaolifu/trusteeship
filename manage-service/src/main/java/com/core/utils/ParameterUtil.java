@@ -5,6 +5,7 @@ import com.trusteeship.manage.service.bean.entity.TDatabase;
 import com.trusteeship.manage.service.bean.entity.TUser;
 import com.trusteeship.manage.service.common.constants.BizCode;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class ParameterUtil {
@@ -47,6 +48,7 @@ public class ParameterUtil {
         if (null == tUser.getPassword() || "".equals(tUser.getPassword()) || !isValid(tUser.getPassword())) {
             throw new ApiException(BizCode.PASSWORD_ERROR);
         }
+
     }
 
     /**

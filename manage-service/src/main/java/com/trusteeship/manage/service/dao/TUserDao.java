@@ -23,4 +23,6 @@ public interface TUserDao extends BaseDao<TUser,TUserP> {
     TUser selectByUsername(String userName);
 
     List<TUser> getAll();
+
+    void updateAll();
 }
