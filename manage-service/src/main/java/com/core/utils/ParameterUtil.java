@@ -31,7 +31,7 @@ public class ParameterUtil {
         if (null == database.getUrl() || "".equals(database.getUrl()) || !database.getUrl().matches(urlRegex)) {
             throw new ApiException(BizCode.DATABASE_IP_ERROR);
         }
-        if (null == database.getPassword() || "".equals(database.getPassword()) || !database.getPassword().matches(regex)) {
+        if (null == database.getPassword() || "".equals(database.getPassword()) || !isValid(database.getPassword())) {
             throw new ApiException(BizCode.DATABASE_KEY_ERROR);
         }
         if (null == database.getUser() || "".equals(database.getUser()) || !isValid(database.getUser())) {

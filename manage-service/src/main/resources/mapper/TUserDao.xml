@@ -61,7 +61,7 @@
          select t.* from t_user t where t.user = #{user} and t.password = #{password}
     </select>
     <select id="selectByUsername" parameterType="java.lang.String"  resultMap="BaseResultMap">
-         select t.id,t.status from t_user t where t.user = #{user}
+         select t.id,t.status,t.update_time from t_user t where t.user = #{user}
     </select>
 
     <select id="getUserNameList" parameterType="java.lang.String"  resultType="java.lang.String">
