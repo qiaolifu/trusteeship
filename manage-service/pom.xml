@@ -42,14 +42,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.6.0</version>
             </plugin>
             <plugin>
                 <dependencies>
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.16</version>
+                        <version>5.1.47</version>
                     </dependency>
                 </dependencies>
                 <groupId>org.mybatis.generator</groupId>

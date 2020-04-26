@@ -81,9 +81,9 @@ public class TDatabaseController extends BaseController {
 
         String userName = checkToken(request);
         TUser user = tUserService.selectByUsername(userName);
-        if (!user.getStatus().equals(TUser.VIP)){
-            throw new ApiException(BizCode.ONLY_VIP);
-        }
+//        if (!user.getStatus().equals(TUser.VIP)){
+//            throw new ApiException(BizCode.ONLY_VIP);
+//        }
         TDatabase database = tDatabaseService.selectByUsername(userName);
         DatabaseUtil.recover(attachment.getFilename(),user,database);
         return R.ok();
