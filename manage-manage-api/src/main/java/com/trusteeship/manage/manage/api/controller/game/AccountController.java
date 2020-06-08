@@ -21,6 +21,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.core.utils.StringUtil.encodeRoleName;
+
 @RestController
 @RequestMapping(value = "/api/account")
 @Api(value = "")
@@ -46,7 +48,36 @@ public class AccountController extends BaseController {
         str = "taiwan_cain";
         Connection connRole = ConnectToDatabase(database, str);
         List<GameRole> roles = roleList(connRole, uid);
+        for (GameRole role : roles){
+            role.setCharacterName(encodeRoleName(role.getCharacterName()));
+        }
         return R.ok().put("roles", roles);
+    }
+
+    @PostMapping(value = "/role/recover")
+    @ApiOperation(value = "账号角色恢复")
+    public R insert(HttpServletRequest request, @RequestBody GameRole role) throws Exception {
+        String u = checkToken(request);
+        TDatabase database = tDatabaseService.selectByUsername(u);
+        if (null == database) throw new ApiException(BizCode.DATABASE_NOT_BINDING);
+        //查账号
+        String str = "taiwan_cain";
+        Connection connRole = ConnectToDatabase(database, str);
+        Integer result = recoverRole(connRole, role);
+        return R.ok();
+    }
+
+    private Integer recoverRole(Connection connRole, GameRole role) {
+
+        String sql = "update taiwan_cain.charac_info t set t.delete_flag = 0 where t.charac_no = ?";
+        try {
+            PreparedStatement sta = connRole.prepareStatement(sql);
+            sta.setString(1, role.getCharacterNo());
+            return sta.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private List<GameRole> roleList(Connection connRole, String uid) throws SQLException {
@@ -106,33 +137,6 @@ public class AccountController extends BaseController {
         return null;
 
     }
-
-    @PostMapping(value = "/role/recover")
-    @ApiOperation(value = "账号角色恢复")
-    public R insert(HttpServletRequest request, @RequestBody GameRole role) throws Exception {
-        String u = checkToken(request);
-        TDatabase database = tDatabaseService.selectByUsername(u);
-        if (null == database) throw new ApiException(BizCode.DATABASE_NOT_BINDING);
-        //查账号
-        String str = "taiwan_cain";
-        Connection connRole = ConnectToDatabase(database, str);
-        Integer result = recoverRole(connRole, role);
-        return R.ok();
-    }
-
-    private Integer recoverRole(Connection connRole, GameRole role) {
-
-        String sql = "update taiwan_cain.charac_info t set t.delete_flag = 0 where t.charac_no = ?";
-        try {
-            PreparedStatement sta = connRole.prepareStatement(sql);
-            sta.setString(1, role.getCharacterNo());
-            return sta.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     public Connection ConnectToDatabase(TDatabase database, String str) {
         //连接url

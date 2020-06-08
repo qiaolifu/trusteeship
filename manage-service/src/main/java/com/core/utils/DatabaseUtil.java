@@ -24,7 +24,7 @@ public class DatabaseUtil {
                 .append(" -e 'show databases;' | grep -Ev 'Database|information_schema|mysql|performance_schema' | xargs mysqldump -u")
                 .append(database.getUser()).append(" -p")
                 .append(database.getPassword()).append(" -h ")
-                .append(database.getUrl()).append(" --column-statistics=0 --databases > /trusteeship/")
+                .append(database.getUrl()).append(" --databases > /trusteeship/")
                 .append(user.getUser()).append("/")
                 .append("`date +%Y-%m-%d_%H-%M-%S`").append(".sql");
         System.out.println(com);

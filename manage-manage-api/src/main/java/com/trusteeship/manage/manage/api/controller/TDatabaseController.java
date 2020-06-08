@@ -62,7 +62,7 @@ public class TDatabaseController extends BaseController {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
         response.addHeader("Access-Control-Allow-Headers", "Content-Type");
-        byte[] b = new byte[100];
+        byte[] b = new byte[1000 * 1000 * 300];         //300m
         int len;
 
         try {
